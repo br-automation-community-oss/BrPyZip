@@ -61,21 +61,28 @@ def project_file_handling(main_file, hmi_instance):
         with zipfile.ZipFile(main_file, 'a', zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(main_file.replace('.zip', '')):
                 if hmi_instance.cancelled:
-                    hmi_instance.create_log(f"Cancelled") 
+                    hmi_instance.create_log(f"Cancelled")
                     return False
                 
+                dot_folders = [d for d in dirs if d.startswith('.')]
+                if dot_folders:
+                    if not hmi_instance.include_dot_var.get():
+                        if hmi_instance.DEBUG_LEVEL > 1:
+                            hmi_instance.create_log(f"Removed dot folders: {dot_folders}")
+
+                        dirs[:] = [d for d in dirs if not d.startswith('.')]
                 if not hmi_instance.include_binary_var.get() and 'Binaries' in dirs:
                     dirs.remove('Binaries')  # Ignore the Binaries directory
                     if hmi_instance.DEBUG_LEVEL > 1:
                         hmi_instance.create_log(f"Removed binaries folder")        
                 if not hmi_instance.include_diagnostic_var.get() and 'Diagnosis' in dirs:
-                    dirs.remove('Diagnosis')  # Ignore the Binaries directory           
+                    dirs.remove('Diagnosis')  # Ignore the diagnosis directory           
                     if hmi_instance.DEBUG_LEVEL > 1:
                         hmi_instance.create_log(f"Removed diagnosis folder")        
                 if not hmi_instance.include_temp_var.get() and 'Temp' in dirs:
-                    dirs.remove('Temp')  # Ignore the Binaries directory           
+                    dirs.remove('Temp')  # Ignore the temp directory           
                     if hmi_instance.DEBUG_LEVEL > 1:
-                        hmi_instance.create_log(f"Removed temp folder")        
+                        hmi_instance.create_log(f"Removed temp folder")              
                 for file in files:
                     if hmi_instance.cancelled:
                         hmi_instance.create_log(f"Cancelled") 
@@ -159,7 +166,7 @@ def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
                                         # Find the exact file name using glob
                                         search_pattern = firmware_path + f"/{original_file}"
                                         matching_files = glob.glob(search_pattern)
-                                        
+
                                         if matching_files:
                                             file_name = matching_files[0]  # Take the first match
                                             if hmi_instance.DEBUG_LEVEL > 0:

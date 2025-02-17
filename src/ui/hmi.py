@@ -48,6 +48,7 @@ class HMI:
         INCLUDE_BINARY = self.config.getboolean('GENERAL', 'include_binary_folder', fallback=False)
         INCLUDE_DIAG = self.config.getboolean('GENERAL', 'include_diag_folder', fallback=False)
         INCLUDE_TEMP = self.config.getboolean('GENERAL', 'include_temp_folder', fallback=False)
+        INCLUDE_DOT = self.config.getboolean('GENERAL', 'include_dot', fallback=False)
         SEPARATE_UPDATE_FILES = self.config.getboolean('GENERAL', 'separate_update_files', fallback=False)
         INCLUDE_RUNTIME_UPDATES = self.config.getboolean('GENERAL', 'include_runtime_updates', fallback=True)
         INCLUDE_TECHNOLOGY_UPDATES = self.config.getboolean('GENERAL', 'include_technology_updates', fallback=True)
@@ -122,6 +123,11 @@ class HMI:
         self.include_temp_checkbox = Checkbutton(checkbox_frame, text="Include temp folder", variable=self.include_temp_var, command=self.on_include_temp_checkbox_change)
         self.include_temp_checkbox.grid(row=2, column=1, sticky="w")
         Tooltip(self.include_temp_checkbox, "Include the temp folder in the ZIP file.")
+
+        self.include_dot_var = IntVar(value=1 if INCLUDE_DOT else 0)
+        self.include_dot_checkbox = Checkbutton(checkbox_frame, text="Include dot folder", variable=self.include_dot_var, command=self.on_include_dot_checkbox_change)
+        self.include_dot_checkbox.grid(row=3, column=1, sticky="w")
+        Tooltip(self.include_dot_checkbox, "Include folders that start with a '.' in the ZIP file. (e.g. .git)")
 
         self.include_runtime_updates_var = IntVar(value=1 if INCLUDE_RUNTIME_UPDATES else 0)
         self.include_runtime_updates_checkbox = Checkbutton(checkbox_frame, text="Include runtime updates", variable=self.include_runtime_updates_var, command=self.on_include_runtime_updates_checkbox_change)
@@ -309,6 +315,14 @@ class HMI:
             self.config.set('GENERAL', 'include_hardware_updates', "True")
         else:
             self.config.set('GENERAL', 'include_hardware_updates', "False")
+        with open ('config.ini', 'w') as configfile:
+            self.config.write(configfile)
+
+    def on_include_dot_checkbox_change(self):
+        if self.include_dot_var.get() == 1:
+            self.config.set('GENERAL', 'include_dot', "True")
+        else:
+            self.config.set('GENERAL', 'include_dot', "False")
         with open ('config.ini', 'w') as configfile:
             self.config.write(configfile)
 
