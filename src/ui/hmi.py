@@ -90,6 +90,8 @@ class HMI:
         self.zip_button = Button(button_frame, text="ZIP", command=self.zip_project, font=tkFont.Font(size=11), width=button_width)
         self.zip_button.grid(row=1, column=0, sticky="e")
         Tooltip(self.zip_button, "Zip the selected project.")
+        if self.file_path == "":
+            self.zip_button.grid_forget()
 
         # Add the Cancel button
         self.cancel_button = Button(button_frame, text="Cancel", command=self.cancel_process, font=tkFont.Font(size=11), width=button_width)
@@ -182,6 +184,7 @@ class HMI:
             
             # Update the project_path entry with the selected file path
             self.project_path_var.set(self.file_path)
+            self.zip_button.grid(row=1, column=0, sticky="e")
 
     # Handle zipping the project
     def zip_project(self):
