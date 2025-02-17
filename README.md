@@ -1,9 +1,3 @@
 # BrPyZip
 
-Python script to zip B&R Automation Studio projects including all updates.
-
-## [**For a detailed description follow this link**](https://br-automation-com.github.io/mappPanel/)
-
-![](https://github.com/br-automation-com/mappPanel/blob/gh-pages/images/overview.jpg)
-
 
