@@ -81,7 +81,8 @@ def project_file_handling(main_file, hmi_instance):
                         hmi_instance.create_log(f"Cancelled") 
                         return
                     file_path = os.path.join(root, file)
-                    zipf.write(file_path, os.path.relpath(file_path, os.path.dirname(main_file)))
+                    arcname = os.path.relpath(file_path, main_file.replace('.zip', ''))
+                    zipf.write(file_path, arcname)
                     if hmi_instance.DEBUG_LEVEL > 1:
                         hmi_instance.create_log(f"Added {file_path}")
 
