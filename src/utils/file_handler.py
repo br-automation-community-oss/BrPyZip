@@ -89,7 +89,7 @@ def project_file_handling(main_file, hmi_instance):
     except Exception as e:
         hmi_instance.create_error(f"Failed to process project files: {e}")
 
-# Process PLC runtime files
+# Process PLC hardware files
 def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
     hmi_instance.create_log(f"--------------------------------------------------------------------------------------------------------------------------------------------")
     hmi_instance.create_log(f"Add hardware files")
@@ -103,6 +103,8 @@ def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
         else:
             hmi_instance.create_error(f"The configuration for '{as_version}' does not exist. Check configuration file and make sure an entry for AS version {as_version} exists.")
             return as_version, False
+        
+        config_as_data = config.get('AS', 'Data')
 
         physical_path = os.path.dirname(file_path) + '/Physical'
         if not os.path.exists(physical_path):
@@ -117,9 +119,59 @@ def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
 
             folder_path = os.path.join(physical_path, dir_name)
             if os.path.isdir(folder_path):
-                if hmi_instance.DEBUG_LEVEL > 1:
+                if hmi_instance.DEBUG_LEVEL > 0:
                     hmi_instance.create_log(f"Found config folder {folder_path}")
 
+                # -----------------------------------------------------------------------------------------------------------------------
+                # Read external hardware details
+                for dir_name_plc in os.listdir(folder_path):
+                    folder_path_ext = os.path.join(folder_path, dir_name_plc)
+                    if os.path.isdir(folder_path_ext):
+                        if hmi_instance.DEBUG_LEVEL > 1:
+                            hmi_instance.create_log(f"Found PLC folder {folder_path_ext}")
+
+                        if os.path.exists(folder_path_ext + "/ExternalHardware"):
+                            if hmi_instance.DEBUG_LEVEL > 0:
+                                hmi_instance.create_log(f"Found external hardware folder in {folder_path_ext}")
+
+                                content = open_file(folder_path_ext + "/" + "/ExternalHardware/ExternalHardwareDevices.xml", hmi_instance)
+                                
+                                # Load and parse the XML file
+                                tree = ET.ElementTree(ET.fromstring(content))
+                                root = tree.getroot()
+
+                                # Iterate through all Module elements                               
+                                for module in root.findall('.//Module'):
+                                    if hmi_instance.cancelled:
+                                        hmi_instance.create_log(f"Cancelled") 
+                                        return False
+
+                                    module_id = module.get('ModuleID')
+                                    module_version = module.get('Version')
+                                    source_file = module.find('SourceFile')
+                                    original_file = source_file.get('OriginalFile') if source_file is not None else 'N/A'
+
+                                    if hmi_instance.DEBUG_LEVEL > 0:
+                                        hmi_instance.create_log(f'Found external module {module_id}, original file name {original_file}')
+
+                                    firmware_path = config_as_data + '/AS' + as_version.replace('_', '') + "/Hardware/Modules" + f"/{module_id}" + f"/{module_version}/Source"
+                                    if os.path.exists(firmware_path):
+                                        # Find the exact file name using glob
+                                        search_pattern = firmware_path + f"/{original_file}"
+                                        matching_files = glob.glob(search_pattern)
+                                        
+                                        if matching_files:
+                                            file_name = matching_files[0]  # Take the first match
+                                            if hmi_instance.DEBUG_LEVEL > 0:
+                                                hmi_instance.create_log(f"Add external firmware file {file_name}")
+
+                                            add_zip_file([file_name], updates_file, 'AS\ExternalHardware\Modules' + f"/{module_id}", hmi_instance)
+
+                                        elif hmi_instance.DEBUG_LEVEL > 1:
+                                            hmi_instance.create_log(f"No external firmware file found for {module_type} and {module_version}")
+
+                # -----------------------------------------------------------------------------------------------------------------------
+                # Read common hardware details
                 content = open_file(folder_path + "/" + "/Hardware.hw", hmi_instance)
 
                 # Placeholder for file handling logic
@@ -149,7 +201,7 @@ def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
                                 file_name = matching_files[0]  # Take the first match
                                 if hmi_instance.DEBUG_LEVEL > 0:
                                     hmi_instance.create_log(f"Add firmware file {file_name}")
-                                add_zip_file([file_name], updates_file, hmi_instance)
+                                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
                             elif hmi_instance.DEBUG_LEVEL > 1:
                                 hmi_instance.create_log(f"No firmware file found for {module_type} and {module_version}")
         return True
@@ -232,7 +284,7 @@ def cpu_file_handling(file_path, updates_file, as_version, hmi_instance):
                                 file_name = matching_files[0]  # Take the first match
                                 if hmi_instance.DEBUG_LEVEL > 0:
                                     hmi_instance.create_log(f"Add runtime file {file_name}")
-                                add_zip_file([file_name], updates_file, hmi_instance)
+                                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
                             elif hmi_instance.DEBUG_LEVEL > 1:
                                 hmi_instance.create_log(f"No runtime file found for {runtime_version} and {cpu_type}")
 
@@ -253,7 +305,7 @@ def cpu_file_handling(file_path, updates_file, as_version, hmi_instance):
                                 file_name = matching_files[0]  # Take the first match
                                 if hmi_instance.DEBUG_LEVEL > 0:
                                     hmi_instance.create_log(f"Add VC file {file_name}")
-                                add_zip_file([file_name], updates_file, hmi_instance)    
+                                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)    
                             elif hmi_instance.DEBUG_LEVEL > 1:
                                 hmi_instance.create_log(f"No VC file found for {vc_version}")
         return True                                   
@@ -335,7 +387,7 @@ def tech_file_handling(updates_file, hmi_instance, content):
                 file_name = matching_files[0]  # Take the first match
                 if hmi_instance.DEBUG_LEVEL > 1:
                     hmi_instance.create_log(f"Add technology file {file_name}")
-                add_zip_file([file_name], updates_file, hmi_instance)
+                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
             elif hmi_instance.DEBUG_LEVEL > 0:
                 hmi_instance.create_log(f"WARNING: No file found for technology package {name} version {version}")
 
@@ -367,15 +419,12 @@ def create_zip_file(zip_file_name, hmi_instance):
         hmi_instance.create_error(f"Failed to create zip file '{zip_file_name}': {e}")
 
 # Add files to a zip file
-def add_zip_file(file_paths, zip_file_name, hmi_instance):
+def add_zip_file(file_paths, zip_file_name, zip_path, hmi_instance):
     try:
         with zipfile.ZipFile(zip_file_name, 'a', zipfile.ZIP_DEFLATED) as zipf:
             existing_files = set(zipf.namelist())
             for file_path in file_paths:
-                if hmi_instance.separate_update_files_var.get():
-                    arcname = f'{os.path.basename(file_path)}'
-                else:
-                    arcname = f'Upgrades/{os.path.basename(file_path)}'
+                arcname = f'{zip_path}/{os.path.basename(file_path)}'
                 if arcname not in existing_files:
                     zipf.write(file_path, arcname)
     except Exception as e:
