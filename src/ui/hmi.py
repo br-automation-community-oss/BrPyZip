@@ -53,6 +53,7 @@ class HMI:
         INCLUDE_RUNTIME_UPDATES = self.config.getboolean('GENERAL', 'include_runtime_updates', fallback=True)
         INCLUDE_TECHNOLOGY_UPDATES = self.config.getboolean('GENERAL', 'include_technology_updates', fallback=True)
         INCLUDE_HARDWARE_UPDATES = self.config.getboolean('GENERAL', 'include_hardware_updates', fallback=True)
+        INCLUDE_AS_UPDATES = self.config.getboolean('GENERAL', 'include_as_updates', fallback=False)
         self.file_path = self.config.get('GENERAL', 'last_path', fallback=False)
 
         # Frame for label and entry
@@ -144,9 +145,14 @@ class HMI:
         self.include_hardware_updates_checkbox.grid(row=2, column=0, sticky="w")
         Tooltip(self.include_hardware_updates_checkbox, "Include hardware updates in the ZIP file.")
 
+        self.include_as_updates_var = IntVar(value=1 if INCLUDE_AS_UPDATES else 0)
+        self.include_as_updates_checkbox = Checkbutton(checkbox_frame, text="Include Automation Studio updates", variable=self.include_as_updates_var, command=self.on_include_as_updates_checkbox_change)
+        self.include_as_updates_checkbox.grid(row=3, column=0, sticky="w")
+        Tooltip(self.include_as_updates_checkbox, "Include Automation Studio updates in the ZIP file.")
+
         self.separate_update_files_var = IntVar(value=1 if SEPARATE_UPDATE_FILES else 0)
         self.separate_update_files_checkbox = Checkbutton(checkbox_frame, text="Separate upgrades zip file", variable=self.separate_update_files_var, command=self.on_separate_update_files_checkbox_change)
-        self.separate_update_files_checkbox.grid(row=3, column=0, sticky="w")
+        self.separate_update_files_checkbox.grid(row=4, column=0, sticky="w")
         Tooltip(self.separate_update_files_checkbox, "Create a separate ZIP file for upgrades.")
 
         # --- Scrollable Log Text Area ---
@@ -323,6 +329,14 @@ class HMI:
             self.config.set('GENERAL', 'include_dot', "True")
         else:
             self.config.set('GENERAL', 'include_dot', "False")
+        with open ('config.ini', 'w') as configfile:
+            self.config.write(configfile)
+
+    def on_include_as_updates_checkbox_change(self):
+        if self.include_as_updates_var.get() == 1:
+            self.config.set('GENERAL', 'include_as_updates', "True")
+        else:
+            self.config.set('GENERAL', 'include_as_updates', "False")
         with open ('config.ini', 'w') as configfile:
             self.config.write(configfile)
 

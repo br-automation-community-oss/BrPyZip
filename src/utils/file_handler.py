@@ -361,6 +361,28 @@ def tech_file_handling(updates_file, hmi_instance, content):
             hmi_instance.create_error("No AS version found in the APJ file")
             return None, False
 
+        # Include automation studio update files
+        if hmi_instance.include_as_updates_var.get():
+            sp_version = working_version.group(1)
+            if "SP" in sp_version:
+                sp_version = sp_version.replace(" SP", "_SP")
+                if hmi_instance.DEBUG_LEVEL > 1:
+                    hmi_instance.create_log(f"AS is using service pack {sp_version}")
+
+                search_pattern = os.path.join(config_as_path, "Upgrades", "AS" + as_version[0:1] + f"_AS_{sp_version}*.exe")
+                matching_files = glob.glob(search_pattern)
+                if matching_files:
+                    file_name = matching_files[0]  # Take the first match
+                    if hmi_instance.DEBUG_LEVEL > 1:
+                        hmi_instance.create_log(f"Add service pack file {file_name}")
+                    add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
+                elif hmi_instance.DEBUG_LEVEL > 0:
+                    hmi_instance.create_log(f"WARNING: No file found for service pack {name} version {version}")
+
+        if hmi_instance.cancelled:
+            hmi_instance.create_log(f"Cancelled") 
+            return False
+            
         # Finish here when technology updates are disabled
         if not hmi_instance.include_technology_updates_var.get():
             return as_version, True
