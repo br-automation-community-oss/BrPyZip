@@ -1,0 +1,3 @@
+compile
+
+pyinstaller --name=BrPyZip --onefile --icon=./src/bur.ico --add-data "./src/bur.ico;." ./src/main.py
