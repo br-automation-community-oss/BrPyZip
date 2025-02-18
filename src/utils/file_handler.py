@@ -377,7 +377,7 @@ def tech_file_handling(updates_file, hmi_instance, content):
                         hmi_instance.create_log(f"Add service pack file {file_name}")
                     add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
                 elif hmi_instance.DEBUG_LEVEL > 0:
-                    hmi_instance.create_log(f"WARNING: No file found for service pack {name} version {version}")
+                    hmi_instance.create_log(f"WARNING: No file found for service pack version {sp_version}")
 
         if hmi_instance.cancelled:
             hmi_instance.create_log(f"Cancelled") 
