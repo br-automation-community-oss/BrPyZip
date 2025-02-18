@@ -4,7 +4,7 @@ from tkinter import Tk
 from ui.hmi import HMI
 import configparser
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 DEBUG_LEVEL = 0                                             
 CONFIG_FILE = "config.ini"
 ICON_FILE = os.path.join(os.path.dirname(__file__), 'bur.ico') # Path to your icon file

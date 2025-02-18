@@ -234,6 +234,11 @@ class HMI:
         self.cancel_button.grid_forget()
         self.save_log_button.grid()
 
+        # Open the directory containing the ZIP file
+        zip_file_path = os.path.dirname(project_path)
+        if os.path.exists(zip_file_path):
+            os.startfile(os.path.dirname(zip_file_path))
+
     def cancel_process(self):
         """
         Cancels the ongoing process.
