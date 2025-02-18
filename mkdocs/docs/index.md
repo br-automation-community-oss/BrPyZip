@@ -12,7 +12,7 @@ The script can be run in two ways:
 
 ### All in one executable
 
-1. Download the latest release from the [releases page]
+1. Download the latest release from the [releases page](https://github.com/br-automation-com/BrPyZip/releases)
 2. Run the executable
 
 ### Python script
@@ -27,7 +27,7 @@ The script can be configured using the `config.ini` file. The config has 3 secti
 
 ### AS
 
-The `AS` section contains the path to the Automation Studio installation. This is used to find the `Update` folder.
+The `AS` section contains the path to the Automation Studio installation. This is used to find the `Update` folder. Make sure the path in this section matches your Automation Studio installations.
 
 ### GENERAL
 
