@@ -350,6 +350,48 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#run-with-windows-explorer-context-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run with Windows Explorer context menu
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run with Windows Explorer context menu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copy-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Copy files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-registry-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add registry entries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -446,6 +488,49 @@
 <p>In the general section you can set the debug level. The debug level can be set to 0 = errors, 1 = info, 2 = debug. The other options in this section are the last settings from the UI.</p>
 <h3 id="translate">TRANSLATE</h3>
 <p>Some CPUs share the same runtime file. For example, the X20CP3687 and X20CP1687 share the same runtime file. The <code>TRANSLATE</code> section is used to translate the CPU name to the runtime file.</p>
+<h2 id="run-with-windows-explorer-context-menu">Run with Windows Explorer context menu</h2>
+<p>The script can be run as a windows explorer context menu. To add the context menu entry follow these steps:</p>
+<h3 id="copy-files">Copy files</h3>
+<p>Copy all files from the release package to a folder on your PC.</p>
+<h3 id="add-registry-entries">Add registry entries</h3>
+<p>Edit the file CreateContextMenu.reg and change the path to the folder where you copied the files. Make sure you change all 3 paths in the file.</p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.English\Shell\BrPyZip]
+@=&quot;BrPyZip&quot;
+&quot;Icon&quot;=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot;,0&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.English\Shell\BrPyZip\command]
+@=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot; \&quot;%1\&quot;&quot;
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.German\Shell\BrPyZip\command]
+@=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot; \&quot;%1\&quot;&quot;
+</code></pre>
+<p>Save the file and then Double click the file to add the registry entries.</p>
+<h3 id="usage">Usage</h3>
+<p>Right click on the Automation Studio project file and select <code>BrPyZip</code>. This will bring up the window for additional configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Windows 10</th>
+<th>Windows 11</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>In Windows 10 the option should show up immediately.</td>
+<td>In Windows 11 you have click on "Show more options" to see the option.</td>
+</tr>
+<tr>
+<td><img alt="" src="images/w10_context1.png" /></td>
+<td><img alt="" src="images/w11_context1.png" /></td>
+</tr>
+<tr>
+<td>--------------------------------</td>
+<td>--------------------------------</td>
+</tr>
+</tbody>
+</table>
 
 
 
