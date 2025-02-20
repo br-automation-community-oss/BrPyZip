@@ -1,4 +1,4 @@
-site_name: mappPanel community version
+site_name: BrPyZip
 use_directory_urls: false
 
 extra_css: [extra.css]
@@ -31,5 +31,5 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
 
-repo_url: https://github.com/br-automation-com/
+repo_url: https://github.com/br-automation-com/BrPyZip
 repo_name: GitHub Repo
