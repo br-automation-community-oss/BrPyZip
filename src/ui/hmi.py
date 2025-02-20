@@ -35,15 +35,16 @@ class Tooltip:
             tw.destroy()
 
 class HMI:
-    def __init__(self, master, VERSION):
+    def __init__(self, master, VERSION, DEBUG_LEVEL, cfg_file):
         self.master = master
         self.VERSION = VERSION  # Store VERSION as an instance variable
-        self.DEBUG_LEVEL = 2
+        self.DEBUG_LEVEL = DEBUG_LEVEL
+        self.cfg_file = cfg_file
         self.cancelled = False
         master.title(f"B&R project file zipper version {VERSION}")
 
         self.config = configparser.ConfigParser()
-        self.config.read("config.ini")
+        self.config.read(self.cfg_file)
 
         INCLUDE_BINARY = self.config.getboolean('GENERAL', 'include_binary_folder', fallback=False)
         INCLUDE_DIAG = self.config.getboolean('GENERAL', 'include_diag_folder', fallback=False)
@@ -226,7 +227,7 @@ class HMI:
 
         self.cancelled = False
         self.create_log(f"Starting with version {self.VERSION}")
-        process_files(project_path, self)
+        process_files(self.cfg_file, project_path, self)
 
         # Show the buttons again
         self.open_button.grid(row=0, column=0, sticky="e")

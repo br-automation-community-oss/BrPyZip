@@ -7,7 +7,7 @@ import glob
 import zipfile
 
 # Process all files
-def process_files(file_path, hmi_instance):
+def process_files(cfg_file, file_path, hmi_instance):
     try:
         # Create main zip file
         main_file = updates_file = os.path.dirname(file_path) + ".zip"
@@ -20,7 +20,7 @@ def process_files(file_path, hmi_instance):
         hmi_instance.progress['value'] = 10
         hmi_instance.master.update()
         content = open_file(file_path, hmi_instance)
-        as_version, result = tech_file_handling(updates_file, hmi_instance, content)
+        as_version, result = tech_file_handling(cfg_file, updates_file, hmi_instance, content)
         if not result or hmi_instance.cancelled:
             return
         
@@ -28,7 +28,7 @@ def process_files(file_path, hmi_instance):
         if hmi_instance.include_runtime_updates_var.get():
             hmi_instance.progress['value'] = 30
             hmi_instance.master.update()
-            result = cpu_file_handling(file_path, updates_file, as_version, hmi_instance)
+            result = cpu_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance)
             if not result or hmi_instance.cancelled:
                 return
 
@@ -36,7 +36,7 @@ def process_files(file_path, hmi_instance):
         if hmi_instance.include_hardware_updates_var.get():
             hmi_instance.progress['value'] = 50
             hmi_instance.master.update()
-            result = hw_file_handling(file_path, updates_file, as_version, hmi_instance)
+            result = hw_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance)
             if not result or hmi_instance.cancelled:
                 return
 
@@ -97,14 +97,14 @@ def project_file_handling(main_file, hmi_instance):
         hmi_instance.create_error(f"Failed to process project files: {e}")
 
 # Process PLC hardware files
-def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
+def hw_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance):
     hmi_instance.create_log(f"--------------------------------------------------------------------------------------------------------------------------------------------")
     hmi_instance.create_log(f"Add hardware files")
 
     try:
         # Read the configuration file
         config = configparser.ConfigParser()
-        config.read("config.ini")
+        config.read(cfg_file)
         if config.has_option('AS', as_version):
             config_as_path = config.get('AS', as_version)
         else:
@@ -216,14 +216,14 @@ def hw_file_handling(file_path, updates_file, as_version, hmi_instance):
         hmi_instance.create_error(f"Failed to process hardware files: {e}")    
 
 # Process PLC runtime files
-def cpu_file_handling(file_path, updates_file, as_version, hmi_instance):
+def cpu_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance):
     hmi_instance.create_log(f"--------------------------------------------------------------------------------------------------------------------------------------------")
     hmi_instance.create_log(f"Add runtime files")
 
     try:
         # Read the configuration file
         config = configparser.ConfigParser()
-        config.read("config.ini")
+        config.read(cfg_file)
 
         if config.has_option('AS', as_version):
             config_as_path = config.get('AS', as_version)
@@ -321,14 +321,14 @@ def cpu_file_handling(file_path, updates_file, as_version, hmi_instance):
         hmi_instance.create_error(f"Failed to process runtime files: {e}")
 
 # Process project apj file
-def tech_file_handling(updates_file, hmi_instance, content):
+def tech_file_handling(cfg_file, updates_file, hmi_instance, content):
     hmi_instance.create_log(f"--------------------------------------------------------------------------------------------------------------------------------------------")
     hmi_instance.create_log(f"Find AS version")
 
     try:
         # Read the configuration file
         config = configparser.ConfigParser()
-        config.read("config.ini")
+        config.read(cfg_file)
         
         # Define the namespace
         namespace = {'ns': 'http://br-automation.co.at/AS/Project'}
