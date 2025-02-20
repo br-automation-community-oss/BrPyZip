@@ -37,4 +37,41 @@ In the general section you can set the debug level. The debug level can be set t
 
 Some CPUs share the same runtime file. For example, the X20CP3687 and X20CP1687 share the same runtime file. The `TRANSLATE` section is used to translate the CPU name to the runtime file.
 
+## Run with Windows Explorer context menu
+
+The script can be run as a windows explorer context menu. To add the context menu entry follow these steps:
+
+### Copy files
+
+Copy all files from the release package to a folder on your PC.
+
+### Add registry entries
+
+Edit the file CreateContextMenu.reg and change the path to the folder where you copied the files. Make sure you change all 3 paths in the file.
+```
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.English\Shell\BrPyZip]
+@="BrPyZip"
+"Icon"="\"C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\",0"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.English\Shell\BrPyZip\command]
+@="\"C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\" \"%1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.German\Shell\BrPyZip\command]
+@="\"C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\" \"%1\""
+```
+
+Save the file and then Double click the file to add the registry entries.
+
+### Usage
+
+Right click on the Automation Studio project file and select `BrPyZip`. This will bring up the window for additional configuration.
+
+| Windows 10 | Windows 11 |
+|---|---|
+| In Windows 10 the option should show up immediately. | In Windows 11 you have click on "Show more options" to see the option. |
+| ![](./images/w10_context1.png) | ![](./images/w11_context1.png) |
+|--------------------------------|--------------------------------|
+
 
