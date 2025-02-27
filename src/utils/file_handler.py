@@ -141,41 +141,45 @@ def hw_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance
                             if hmi_instance.DEBUG_LEVEL > 0:
                                 hmi_instance.create_log(f"Found external hardware folder in {folder_path_ext}")
 
-                                content = open_file(folder_path_ext + "/" + "/ExternalHardware/ExternalHardwareDevices.xml", hmi_instance)
-                                
-                                # Load and parse the XML file
-                                tree = ET.ElementTree(ET.fromstring(content))
-                                root = tree.getroot()
+                                ExternalHardwareFile = folder_path_ext + "/" + "/ExternalHardware/ExternalHardwareDevices.xml"
+                                if os.path.exists(ExternalHardwareFile):
+                                    content = open_file(ExternalHardwareFile, hmi_instance)
+                                    
+                                    # Load and parse the XML file
+                                    tree = ET.ElementTree(ET.fromstring(content))
+                                    root = tree.getroot()
 
-                                # Iterate through all Module elements                               
-                                for module in root.findall('.//Module'):
-                                    if hmi_instance.cancelled:
-                                        hmi_instance.create_log(f"Cancelled") 
-                                        return False
+                                    # Iterate through all Module elements                               
+                                    for module in root.findall('.//Module'):
+                                        if hmi_instance.cancelled:
+                                            hmi_instance.create_log(f"Cancelled") 
+                                            return False
 
-                                    module_id = module.get('ModuleID')
-                                    module_version = module.get('Version')
-                                    source_file = module.find('SourceFile')
-                                    original_file = source_file.get('OriginalFile') if source_file is not None else 'N/A'
+                                        module_id = module.get('ModuleID')
+                                        module_version = module.get('Version')
+                                        source_file = module.find('SourceFile')
+                                        original_file = source_file.get('OriginalFile') if source_file is not None else 'N/A'
 
-                                    if hmi_instance.DEBUG_LEVEL > 0:
-                                        hmi_instance.create_log(f'Found external module {module_id}, original file name {original_file}')
+                                        if hmi_instance.DEBUG_LEVEL > 0:
+                                            hmi_instance.create_log(f'Found external module {module_id}, original file name {original_file}')
 
-                                    firmware_path = config_as_data + '/AS' + as_version.replace('_', '') + "/Hardware/Modules" + f"/{module_id}" + f"/{module_version}/Source"
-                                    if os.path.exists(firmware_path):
-                                        # Find the exact file name using glob
-                                        search_pattern = firmware_path + f"/{original_file}"
-                                        matching_files = glob.glob(search_pattern)
+                                        firmware_path = config_as_data + '/AS' + as_version.replace('_', '') + "/Hardware/Modules" + f"/{module_id}" + f"/{module_version}/Source"
+                                        if os.path.exists(firmware_path):
+                                            # Find the exact file name using glob
+                                            search_pattern = firmware_path + f"/{original_file}"
+                                            matching_files = glob.glob(search_pattern)
 
-                                        if matching_files:
-                                            file_name = matching_files[0]  # Take the first match
-                                            if hmi_instance.DEBUG_LEVEL > 0:
-                                                hmi_instance.create_log(f"Add external firmware file {file_name}")
+                                            if matching_files:
+                                                file_name = matching_files[0]  # Take the first match
+                                                if hmi_instance.DEBUG_LEVEL > 0:
+                                                    hmi_instance.create_log(f"Add external firmware file {file_name}")
 
-                                            add_zip_file([file_name], updates_file, 'AS\ExternalHardware\Modules' + f"/{module_id}", hmi_instance)
+                                                add_zip_file([file_name], updates_file, 'AS\ExternalHardware\Modules' + f"/{module_id}", hmi_instance)
 
-                                        elif hmi_instance.DEBUG_LEVEL > 1:
-                                            hmi_instance.create_log(f"No external firmware file found for {module_type} and {module_version}")
+                                            elif hmi_instance.DEBUG_LEVEL > 1:
+                                                hmi_instance.create_log(f"No external firmware file found for {module_type} and {module_version}")
+                                elif hmi_instance.DEBUG_LEVEL > 0:
+                                    hmi_instance.create_log(f"Found external hardware folder but no ExternalHardwareDevices.xml file in {folder_path_ext}")
 
                 # -----------------------------------------------------------------------------------------------------------------------
                 # Read common hardware details
