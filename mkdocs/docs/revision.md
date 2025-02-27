@@ -1,10 +1,13 @@
-#### 20.02.2025
+#### 27.02.2025 Version 1.2
+* Fixed error message when external hardware file is missing
+
+#### 20.02.2025 Version 1.1
 
 * Open directory containing the ZIP file
 * Allow project path as start parameter
 * Add option to create Windows Explorer context menu entry
 * Minor improvements and bug fixes
 
-#### 17.02.2025
+#### 17.02.2025 Version 1.0
 
 First release
