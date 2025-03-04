@@ -183,38 +183,43 @@ def hw_file_handling(cfg_file, file_path, updates_file, as_version, hmi_instance
 
                 # -----------------------------------------------------------------------------------------------------------------------
                 # Read common hardware details
-                content = open_file(folder_path + "/" + "/Hardware.hw", hmi_instance)
+                hardware_file = folder_path + "/" + "/Hardware.hw"
+                if not os.path.exists(hardware_file):
+                    hmi_instance.create_log(f"Can not find the hardware file in {folder_path}")
 
-                # Placeholder for file handling logic
-                tree = ET.ElementTree(ET.fromstring(content))
-                root = tree.getroot()
+                else:
+                    content = open_file(folder_path + "/" + "/Hardware.hw", hmi_instance)
 
-                namespace = {'ns': 'http://br-automation.co.at/AS/Hardware'}
-                modules = root.findall('.//ns:Module', namespace)
-                
-                for module in modules:
-                    if hmi_instance.cancelled:
-                        hmi_instance.create_log(f"Cancelled") 
-                        return False
+                    # Placeholder for file handling logic
+                    tree = ET.ElementTree(ET.fromstring(content))
+                    root = tree.getroot()
 
-                    module_type = module.get('Type')
-                    module_version = module.get('Version')
-                    if hmi_instance.DEBUG_LEVEL > 1:
-                        hmi_instance.create_log(f'Found module type {module_type} with version {module_version}')
-
-                    if os.path.exists(config_as_path +  "/Upgrades" + f"/{module_type}"):
-                        if os.path.exists(config_as_path +  "/Upgrades" + f"/{module_type}" + f"/{module_version}"):
+                    namespace = {'ns': 'http://br-automation.co.at/AS/Hardware'}
+                    modules = root.findall('.//ns:Module', namespace)
                     
-                            # Find the exact file name using glob
-                            search_pattern = config_as_path +  "/Upgrades" + f"/{module_type}" + f"/{module_version}" + f"/*.exe"
-                            matching_files = glob.glob(search_pattern)
-                            if matching_files:
-                                file_name = matching_files[0]  # Take the first match
-                                if hmi_instance.DEBUG_LEVEL > 0:
-                                    hmi_instance.create_log(f"Add firmware file {file_name}")
-                                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
-                            elif hmi_instance.DEBUG_LEVEL > 1:
-                                hmi_instance.create_log(f"No firmware file found for {module_type} and {module_version}")
+                    for module in modules:
+                        if hmi_instance.cancelled:
+                            hmi_instance.create_log(f"Cancelled") 
+                            return False
+
+                        module_type = module.get('Type')
+                        module_version = module.get('Version')
+                        if hmi_instance.DEBUG_LEVEL > 1:
+                            hmi_instance.create_log(f'Found module type {module_type} with version {module_version}')
+
+                        if os.path.exists(config_as_path +  "/Upgrades" + f"/{module_type}"):
+                            if os.path.exists(config_as_path +  "/Upgrades" + f"/{module_type}" + f"/{module_version}"):
+                        
+                                # Find the exact file name using glob
+                                search_pattern = config_as_path +  "/Upgrades" + f"/{module_type}" + f"/{module_version}" + f"/*.exe"
+                                matching_files = glob.glob(search_pattern)
+                                if matching_files:
+                                    file_name = matching_files[0]  # Take the first match
+                                    if hmi_instance.DEBUG_LEVEL > 0:
+                                        hmi_instance.create_log(f"Add firmware file {file_name}")
+                                    add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
+                                elif hmi_instance.DEBUG_LEVEL > 1:
+                                    hmi_instance.create_log(f"No firmware file found for {module_type} and {module_version}")
         return True
     except Exception as e:
         hmi_instance.create_error(f"Failed to process hardware files: {e}")    
