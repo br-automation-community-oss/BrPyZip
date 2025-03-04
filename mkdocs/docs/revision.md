@@ -1,3 +1,6 @@
+#### 04.03.2025 Version 1.3
+* Fixed error message when no technology packages are used
+
 #### 27.02.2025 Version 1.2
 * Fixed error message when external hardware file is missing
 
