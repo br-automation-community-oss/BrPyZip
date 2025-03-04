@@ -395,34 +395,35 @@ def tech_file_handling(cfg_file, updates_file, hmi_instance, content):
         hmi_instance.create_log(f"Add technology files")
         technology_packages_element = root.find('ns:TechnologyPackages', namespace)
         if technology_packages_element is None:
-            hmi_instance.create_log("WARNING: No Technology Packages element not found in the XML file")
+            hmi_instance.create_log("No Technology Packages element not found in the XML file")
 
-        technology_packages = []
-        for package in technology_packages_element:
-            if hmi_instance.cancelled:
-                hmi_instance.create_log(f"Cancelled") 
-                return False
+        else:
+            technology_packages = []
+            for package in technology_packages_element:
+                if hmi_instance.cancelled:
+                    hmi_instance.create_log(f"Cancelled") 
+                    return False
 
-            name = package.tag.split('}')[1] 
-            version = package.attrib.get('Version')
+                name = package.tag.split('}')[1] 
+                version = package.attrib.get('Version')
 
-            # Ignore elements with the name 'mapp'
-            if name.lower() == 'mapp':
-                continue
-                
-            if hmi_instance.DEBUG_LEVEL > 0:
-                hmi_instance.create_log(f"Found technology package {name} version {version}")
+                # Ignore elements with the name 'mapp'
+                if name.lower() == 'mapp':
+                    continue
+                    
+                if hmi_instance.DEBUG_LEVEL > 0:
+                    hmi_instance.create_log(f"Found technology package {name} version {version}")
 
-            # Find the exact file name using glob            
-            search_pattern = os.path.join(config_as_path, "Upgrades", "AS" + as_version[0:1] + f"_TP_{name}_{version}*.exe")
-            matching_files = glob.glob(search_pattern)
-            if matching_files:
-                file_name = matching_files[0]  # Take the first match
-                if hmi_instance.DEBUG_LEVEL > 1:
-                    hmi_instance.create_log(f"Add technology file {file_name}")
-                add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
-            elif hmi_instance.DEBUG_LEVEL > 0:
-                hmi_instance.create_log(f"WARNING: No file found for technology package {name} version {version}")
+                # Find the exact file name using glob            
+                search_pattern = os.path.join(config_as_path, "Upgrades", "AS" + as_version[0:1] + f"_TP_{name}_{version}*.exe")
+                matching_files = glob.glob(search_pattern)
+                if matching_files:
+                    file_name = matching_files[0]  # Take the first match
+                    if hmi_instance.DEBUG_LEVEL > 1:
+                        hmi_instance.create_log(f"Add technology file {file_name}")
+                    add_zip_file([file_name], updates_file, 'Upgrades', hmi_instance)
+                elif hmi_instance.DEBUG_LEVEL > 0:
+                    hmi_instance.create_log(f"WARNING: No file found for technology package {name} version {version}")
 
         return as_version, True
     except Exception as e:
