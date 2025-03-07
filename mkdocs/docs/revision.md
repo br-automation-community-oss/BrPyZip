@@ -1,3 +1,6 @@
+#### 07.03.2025 Version 1.4
+* Fixed mappService are not included
+
 #### 04.03.2025 Version 1.3
 * Fixed error message when no technology packages are used
 * Account for missing hardware files in the project

@@ -414,7 +414,7 @@ def tech_file_handling(cfg_file, updates_file, hmi_instance, content):
 
                 # Ignore elements with the name 'mapp'
                 if name.lower() == 'mapp':
-                    continue
+                    name = 'mappServices'
                     
                 if hmi_instance.DEBUG_LEVEL > 0:
                     hmi_instance.create_log(f"Found technology package {name} version {version}")
