@@ -1,9 +1,8 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import configparser
 import os
 from tkinter import Label, Button, Entry, Frame, Checkbutton, IntVar, messagebox, Toplevel, StringVar, ttk, Text, Scrollbar, filedialog
-from utils.file_handler import process_files  # Assuming this import is correct
+from utils.file_handler import process_files, create_log
 from datetime import datetime
 
 class Tooltip:
@@ -35,16 +34,13 @@ class Tooltip:
             tw.destroy()
 
 class HMI:
-    def __init__(self, master, VERSION, DEBUG_LEVEL, cfg_file):
+    def __init__(self, master, config, VERSION):
         self.master = master
+        self.config = config
         self.VERSION = VERSION  # Store VERSION as an instance variable
-        self.DEBUG_LEVEL = DEBUG_LEVEL
-        self.cfg_file = cfg_file
+        self.DEBUG_LEVEL = int(config.get('GENERAL', 'debug_level'))
         self.cancelled = False
         master.title(f"B&R project file zipper version {VERSION}")
-
-        self.config = configparser.ConfigParser()
-        self.config.read(self.cfg_file)
 
         INCLUDE_BINARY = self.config.getboolean('GENERAL', 'include_binary_folder', fallback=False)
         INCLUDE_DIAG = self.config.getboolean('GENERAL', 'include_diag_folder', fallback=False)
@@ -188,7 +184,7 @@ class HMI:
         self.file_path = filedialog.askopenfilename(filetypes=[("Automation Studio Project Files", "*.apj")])
         if self.file_path:
             if self.DEBUG_LEVEL > 0:
-                self.create_log(f"Selected file: {self.file_path}")
+                create_log(f"Selected file: {self.file_path}")
             
             # Save the selected file path to the config file
             self.config.set('GENERAL', 'last_path', self.file_path)
@@ -226,8 +222,8 @@ class HMI:
         self.master.update()
 
         self.cancelled = False
-        self.create_log(f"Starting with version {self.VERSION}")
-        process_files(self.cfg_file, project_path, self)
+        create_log(f"Starting with version {self.VERSION}")
+        process_files(self.config, project_path, self)
 
         # Show the buttons again
         self.open_button.grid(row=0, column=0, sticky="e")
@@ -245,34 +241,7 @@ class HMI:
         Cancels the ongoing process.
         """
         self.cancelled = True
-        self.create_log("Process cancelled by user.")
-
-    # Log window entries
-    def create_log(self, log_text):
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_entry = f"{current_time} - {log_text}\n"
-
-        self.log_text.configure(state="normal")  # Enable editing temporarily
-        self.log_text.insert("end", log_entry)    # Insert the new log entry
-        self.log_text.configure(state="disabled") # Disable editing again
-        self.log_text.see("end") # Autoscroll to the end
-        
-        # Refresh the window
-        self.master.update()
-
-    # Create an error popup
-    def create_error(self, error_text):
-        """
-        Creates a popup with the provided error text.
-
-        Args:
-            error_text (str): The error text to be displayed.
-
-        Returns:
-            None
-        """
-        self.create_log(f"ERROR: {error_text}")
-        messagebox.showerror("Error", error_text)
+        create_log("Process cancelled by user.")
 
     def on_include_binary_checkbox_change(self):
         if self.include_binary_var.get() == 1:
@@ -356,4 +325,4 @@ class HMI:
             if file_path:
                 with open(file_path, 'w') as file:
                     file.write(log_content)
-                self.create_log(f"Log saved to {file_path}")
+                create_log(f"Log saved to {file_path}")
