@@ -1,3 +1,7 @@
+#### 12.03.2025 Version 1.4
+* New headless mode without UI
+* Code cleanup and minor improvements
+
 #### 07.03.2025 Version 1.4
 * Fixed mappService are not included
 

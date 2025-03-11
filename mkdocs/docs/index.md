@@ -19,7 +19,12 @@ The script can be run in two ways:
 
 1. Download the source code from the [releases page]
 2. Install the required packages 'pip install -r requirements.txt'
-3. Run the script with python './src/main.py'
+3. Run the script with python
+```sh
+python src/main.py [project_path] [options]
+```
+
+See appendix for more information on the options.
 
 ## Configuration
 
