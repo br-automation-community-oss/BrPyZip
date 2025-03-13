@@ -308,8 +308,95 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#headless-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Headless mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arguments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-with-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run with GUI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-in-headless-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run in Headless Mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-binary-folder-and-technology-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Include Binary Folder and Technology Updates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-debug-level-and-separate-update-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set Debug Level and Separate Update Files
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notes
+    </span>
+  </a>
   
 </li>
       
@@ -380,6 +467,49 @@
         </td>
     </tr>
 </table>
+
+<h3 id="headless-mode">Headless mode</h3>
+<p>To run the script witch switches, use the following command:</p>
+<pre><code class="language-sh">python src/main.py [project_path] [options]
+</code></pre>
+<h3 id="arguments">Arguments</h3>
+<ul>
+<li><code>project_path</code>: Path to the Automation Studio project file (.apj).</li>
+</ul>
+<h3 id="options">Options</h3>
+<ul>
+<li><code>--headless</code>: Run in headless mode without GUI.</li>
+<li><code>--debug_level</code>: Set the debug level (integer).</li>
+<li><code>--separate_update_files</code>: Separate update files into a different zip. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_runtime_updates</code>: Include runtime updates. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_technology_updates</code>: Include technology updates. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_hardware_updates</code>: Include hardware updates. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_as_updates</code>: Include Automation Studio updates. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_binary_folder</code>: Include binary folder. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_diag_folder</code>: Include diagnosis folder. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_temp_folder</code>: Include temp folder. Can be specified as <code>true</code> or <code>false</code>. </li>
+<li><code>--include_dot_folder</code>: Include dot folders. Can be specified as <code>true</code> or <code>false</code>. </li>
+</ul>
+<p>If an option is not specified, the value from config.ini will be used.</p>
+<h3 id="examples">Examples</h3>
+<h4 id="run-with-gui">Run with GUI</h4>
+<pre><code class="language-sh">python src/main.py &quot;C:\\projects\\sps_sample\\sample.apj&quot;
+</code></pre>
+<h4 id="run-in-headless-mode">Run in Headless Mode</h4>
+<pre><code class="language-sh">python src/main.py &quot;C:\\projects\\sps_sample\\sample.apj&quot; --headless
+</code></pre>
+<h4 id="include-binary-folder-and-technology-updates">Include Binary Folder and Technology Updates</h4>
+<pre><code class="language-sh">python src/main.py &quot;C:\\projects\\sps_sample\\sample.apj&quot; --include_binary_folder --include_technology_updates
+</code></pre>
+<h4 id="set-debug-level-and-separate-update-files">Set Debug Level and Separate Update Files</h4>
+<pre><code class="language-sh">python src/main.py &quot;C:\\projects\\sps_sample\\sample.apj&quot; --debug_level 3 --separate_update_files
+</code></pre>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>If a switch is specified without <code>true</code> or <code>false</code>, it is considered <code>True</code>.</li>
+<li>If a switch is specified as <code>false</code>, it is considered <code>False</code>.</li>
+<li>If a switch is not specified, it is considered <code>None</code>.</li>
+</ul>
 
 
 
