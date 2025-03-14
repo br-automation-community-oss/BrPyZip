@@ -22,7 +22,7 @@ Start the installation, set checkboxes, customize installation, restart the syst
 
 ### Headless mode
 
-To run the script witch switches, use the following command:
+To run the script with headless mode, use the following command:
 
 ```sh
 python src/main.py [project_path] [options]

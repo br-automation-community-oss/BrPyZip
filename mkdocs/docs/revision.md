@@ -1,4 +1,4 @@
-#### 12.03.2025 Version 1.5
+#### 14.03.2025 Version 1.5
 * New headless mode without UI
 * Code cleanup and minor improvements
 
