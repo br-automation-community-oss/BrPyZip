@@ -11,6 +11,22 @@
                 "PYTHONPATH": "${workspaceFolder}/src"
             },
             "justMyCode": true
+        },
+        {
+            "name": "Python: Main Headless with Separate Update Files",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/main.py",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+            "args": [
+                "C:\\Temp\\mappViewSample1\\mappViewSample1.apj",
+                "--headless",
+                "--separate_update_files=True"
+            ],
+            "justMyCode": true
         }
     ]
 }
