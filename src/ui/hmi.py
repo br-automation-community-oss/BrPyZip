@@ -232,7 +232,11 @@ class HMI:
         self.save_log_button.grid()
 
         # Open the directory containing the ZIP file
-        zip_file_path = os.path.dirname(project_path)
+        if os.path.isdir(project_path):
+            zip_file_path = project_path
+        else:
+            zip_file_path = os.path.dirname(project_path)
+
         if os.path.exists(zip_file_path):
             os.startfile(os.path.dirname(zip_file_path))
 

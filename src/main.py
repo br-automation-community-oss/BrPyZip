@@ -7,7 +7,7 @@ from ui.hmi import HMI
 from utils.file_handler import process_files
 from typing import Optional
 
-VERSION = "1.5"
+VERSION = "1.6"
 DEBUG_LEVEL = 0                                             
 CONFIG_FILE = "config.ini"
 ICON_FILE = os.path.join(os.path.dirname(__file__), 'bur.ico') # Path to your icon file
