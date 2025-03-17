@@ -1,7 +1,7 @@
 import chardet
 import re
 import os
-import configparser
+import sys
 import xml.etree.ElementTree as ET
 import glob
 import zipfile
@@ -16,6 +16,14 @@ def update_progress(hmi_instance, value):
 # Process all files
 def process_files(config, file_path, hmi_instance=None):
     try:
+        # If project_path is a directory, find the .apj file
+        if os.path.isdir(file_path):
+            apj_files = [f for f in os.listdir(file_path) if f.endswith('.apj')]
+            if not apj_files:
+                create_error(f"No .apj file found in the specified directory '{file_path}'", hmi_instance)
+                sys.exit(0)
+            file_path = os.path.join(file_path, apj_files[0])
+
         # Create main zip file
         main_file = updates_file = os.path.dirname(file_path) + ".zip"
         create_zip_file(updates_file, config.getboolean('GENERAL', 'separate_update_files', fallback=False), hmi_instance)

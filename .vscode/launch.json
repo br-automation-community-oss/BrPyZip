@@ -22,7 +22,7 @@
                 "PYTHONPATH": "${workspaceFolder}/src"
             },
             "args": [
-                "C:\\Temp\\mappViewSample1\\mappViewSample1.apj",
+                "C:\\Temp\\mappViewSample1",
                 "--headless",
                 "--separate_update_files=True"
             ],
