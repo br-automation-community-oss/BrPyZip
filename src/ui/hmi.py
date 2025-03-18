@@ -34,9 +34,10 @@ class Tooltip:
             tw.destroy()
 
 class HMI:
-    def __init__(self, master, config, VERSION):
+    def __init__(self, master, config, cfg_file, VERSION):
         self.master = master
         self.config = config
+        self.cfg_file = cfg_file
         self.VERSION = VERSION  # Store VERSION as an instance variable
         self.DEBUG_LEVEL = int(config.get('GENERAL', 'debug_level'))
         self.cancelled = False
@@ -188,7 +189,7 @@ class HMI:
             
             # Save the selected file path to the config file
             self.config.set('GENERAL', 'last_path', self.file_path)
-            with open ('config.ini', 'w') as configfile:
+            with open (self.cfg_file, 'w') as configfile:
                 self.config.write(configfile)
             
             # Update the project_path entry with the selected file path
@@ -252,7 +253,7 @@ class HMI:
             self.config.set('GENERAL', 'include_binary_folder', "True")
         else:
             self.config.set('GENERAL', 'include_binary_folder', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_diagnostic_checkbox_change(self):
@@ -260,7 +261,7 @@ class HMI:
             self.config.set('GENERAL', 'include_diag_folder', "True")
         else:
             self.config.set('GENERAL', 'include_diag_folder', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_temp_checkbox_change(self):
@@ -268,7 +269,7 @@ class HMI:
             self.config.set('GENERAL', 'include_temp_folder', "True")
         else:
             self.config.set('GENERAL', 'include_temp_folder', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_separate_update_files_checkbox_change(self):
@@ -276,7 +277,7 @@ class HMI:
             self.config.set('GENERAL', 'separate_update_files', "True")
         else:
             self.config.set('GENERAL', 'separate_update_files', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_runtime_updates_checkbox_change(self):
@@ -284,7 +285,7 @@ class HMI:
             self.config.set('GENERAL', 'include_runtime_updates', "True")
         else:
             self.config.set('GENERAL', 'include_runtime_updates', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_technology_updates_checkbox_change(self):
@@ -292,7 +293,7 @@ class HMI:
             self.config.set('GENERAL', 'include_technology_updates', "True")
         else:
             self.config.set('GENERAL', 'include_technology_updates', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_hardware_updates_checkbox_change(self):
@@ -300,7 +301,7 @@ class HMI:
             self.config.set('GENERAL', 'include_hardware_updates', "True")
         else:
             self.config.set('GENERAL', 'include_hardware_updates', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_dot_checkbox_change(self):
@@ -308,7 +309,7 @@ class HMI:
             self.config.set('GENERAL', 'include_dot', "True")
         else:
             self.config.set('GENERAL', 'include_dot', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def on_include_as_updates_checkbox_change(self):
@@ -316,7 +317,7 @@ class HMI:
             self.config.set('GENERAL', 'include_as_updates', "True")
         else:
             self.config.set('GENERAL', 'include_as_updates', "False")
-        with open ('config.ini', 'w') as configfile:
+        with open (self.cfg_file, 'w') as configfile:
             self.config.write(configfile)
 
     def save_log(self):
