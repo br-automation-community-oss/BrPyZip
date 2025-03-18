@@ -152,7 +152,7 @@ def main(project_path: Optional[str] = None,
         ))
 
         if not headless:
-            app = HMI(root, config, VERSION)
+            app = HMI(root, config, cfg_file, VERSION)
             if project_path:
                 if not os.path.exists(project_path):
                     messagebox.showerror("Error", f"Error: The specified project path '{project_path}' does not exist.")
