@@ -1,7 +1,9 @@
-#### 17.03.2025 Version 1.6
+#### 21.03.2025 Version 1.6
 * Project path does not have to be APJ file, but can be the just the project directory
 * Updated registry file to add BrPyZip option on folder right click
+* Added more wildcard PLCs to config
 * Fixed config file was written to wrong directory
+* Fixed runtime is not always included
 
 #### 14.03.2025 Version 1.5
 * New headless mode without UI
