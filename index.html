@@ -499,6 +499,13 @@
 <p>Edit the file CreateContextMenu.reg and change the path to the folder where you copied the files. Make sure you change all 3 paths in the file.</p>
 <pre><code>Windows Registry Editor Version 5.00
 
+[HKEY_CLASSES_ROOT\directory\shell\BrPyZip]
+@=&quot;BrPyZip&quot;
+&quot;Icon&quot;=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot;,0&quot;
+
+[HKEY_CLASSES_ROOT\directory\shell\BrPyZip\command]
+@=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot; \&quot;%1\&quot;&quot;
+
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AutomationStudio.English\Shell\BrPyZip]
 @=&quot;BrPyZip&quot;
 &quot;Icon&quot;=&quot;\&quot;C:\\Users\\YourUserName\\Documents\\BrPyZip\\BrPyZip.exe\&quot;,0&quot;
