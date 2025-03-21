@@ -299,13 +299,14 @@ def cpu_file_handling(config, file_path, updates_file, as_version, hmi_instance)
                                 cpu_type = value
                                 if DEBUG_LEVEL > 1:
                                     create_log(f"Found substitute CPU type is {cpu_type}", hmi_instance)
+                                break
 
                         # Get the runtime version
                         runtime_version = re.search(r'AutomationRuntime Version="([^"]+)"', content)
                         if runtime_version:
                             parts = runtime_version.group(1).split('.')
                             major_version = parts[0][1:].zfill(2)
-                            runtime_version = f'M{major_version}{parts[1]}'
+                            runtime_version = f'{parts[0][0:1]}{major_version}{parts[1]}'
                             if DEBUG_LEVEL > 1:
                                 create_log(f"Runtime version is {runtime_version}", hmi_instance)
 
